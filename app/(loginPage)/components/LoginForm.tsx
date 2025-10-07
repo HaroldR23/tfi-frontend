@@ -2,8 +2,11 @@
 import { useState, useMemo } from "react";
 import { Errors, RegisterForm } from "../lib/types";
 import StrongBarPassword from "./StrongBarPassword";
+import useAuthContext from "@/app/contexts/auth/useAuthContext";
+import { User } from "@/app/lib/types/user";
 
-const LoginForm = ({ onSubmit }: any) => {
+const LoginForm = () => {
+  const { handleRegister, loading } = useAuthContext();
 
   const [form, setForm] = useState<RegisterForm>({
     role: "empleador",
@@ -20,7 +23,6 @@ const LoginForm = ({ onSubmit }: any) => {
   const [errors, setErrors] = useState<Errors>({});
   const [showPwd, setShowPwd] = useState(false);
   const [showPwd2, setShowPwd2] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   const emailRegex = /\S+@\S+\.\S+/;
   const pwdScore = useMemo(() => {
@@ -53,17 +55,16 @@ const LoginForm = ({ onSubmit }: any) => {
   async function handleSubmit(e: any) {
     e.preventDefault();
     if (!validate()) return;
-    setLoading(true);
-    try {
-      const payload = { ...form };
-      // 🔗 Integra tu API real de registro acá
-      await new Promise((res) => setTimeout(res, 900));
-      onSubmit?.(payload);
-    } catch {
-      setErrors((prev) => ({ ...prev, email: "No pudimos crear la cuenta. Probá de nuevo." }));
-    } finally {
-      setLoading(false);
+    const payload: User = {
+      email: form.email,
+      name: form.nombre,
+      password: form.password,
+      role: form.role,
+      telefono: form.telefono || undefined,
+      ciudad: form.ciudad || undefined,
+      cp: form.cp || undefined,
     }
+    await handleRegister?.(payload);
   }
 
   const inputBase = "w-full rounded-xl border px-3 py-2.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-4 transition";
