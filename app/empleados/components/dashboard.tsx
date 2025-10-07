@@ -1,5 +1,6 @@
 "use client";
 
+import useAuthContext from "@/app/contexts/auth/useAuthContext";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useMemo, useState } from "react";
 
@@ -11,7 +12,6 @@ import React, { useMemo, useState } from "react";
 // - Filtros por zona/rol/franja horaria
 
 export default function EmpleadosDashboard({
-  workerName = "María López",
   zones = ["CABA Centro", "CABA Norte", "AMBA Oeste"],
   roles = ["Mozo/a", "Cajero/a", "Cocina", "Delivery"],
   kpis = {
@@ -69,7 +69,7 @@ export default function EmpleadosDashboard({
       return true;
     });
   }, [suggestedJobs, filters]);
-
+  const { user } = useAuthContext();
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-emerald-100 p-4 md:p-8">
       {/* Header */}
@@ -77,7 +77,7 @@ export default function EmpleadosDashboard({
         <div className="flex items-center gap-3">
           <div className="h-10 w-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white font-bold">M</div>
           <div>
-            <h1 className="text-2xl md:text-3xl font-semibold text-gray-900">Hola, {workerName.split(" ")[0]}</h1>
+            <h1 className="text-2xl md:text-3xl font-semibold text-gray-900">Hola, {user?.role == "trabajador" ? user?.name.split(" ")[0] : user?.name}</h1>
             <p className="text-sm text-gray-500">Tu actividad y oportunidades</p>
           </div>
         </div>

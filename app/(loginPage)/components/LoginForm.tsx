@@ -95,14 +95,17 @@ const LoginForm = () => {
 
               {/* Nombre */}
               <div className="space-y-1">
-                <label htmlFor="nombre" className="block text-sm font-medium text-gray-700">Nombre y apellido</label>
+                {form.role == "trabajador" ? 
+                  <label htmlFor="nombre" className="block text-sm font-medium text-gray-700">Nombre y apellido</label> : 
+                  <label htmlFor="nombre" className="block text-sm font-medium text-gray-700">Nombre de la empresa</label>
+                }
                 <input
                   id="nombre"
                   type="text"
                   value={form.nombre}
                   onChange={(e) => setForm((f) => ({ ...f, nombre: e.target.value }))}
                   className={`${inputBase} border-gray-300 focus:ring-emerald-100 focus:border-emerald-500`}
-                  placeholder="Juana Pérez"
+                  placeholder={form.role == "trabajador" ? "Juana Pérez" : "Mi Empresa"}
                 />
                 {errors.nombre && <p className="text-sm text-red-600 mt-1">{errors.nombre}</p>}
               </div>

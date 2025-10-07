@@ -1,5 +1,6 @@
 "use client";
 
+import useAuthContext from "@/app/contexts/auth/useAuthContext";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useMemo, useState } from "react";
 
@@ -14,7 +15,6 @@ import React, { useMemo, useState } from "react";
 
 export default function NegociosDashboard({
   plan = "Profesional", // Esencial | Profesional | Enterprise
-  businessName = "Café Ribera",
   sites = [
     { id: "s1", name: "Sucursal Centro" },
     { id: "s2", name: "Sucursal Norte" },
@@ -74,6 +74,7 @@ export default function NegociosDashboard({
   }, [activePosts, filters]);
 
   const currency = (n: any) => n?.toLocaleString("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 });
+  const { user } = useAuthContext();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-emerald-100 p-4 md:p-8">
@@ -82,7 +83,7 @@ export default function NegociosDashboard({
         <div className="flex items-center gap-3">
           <div className="h-10 w-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white font-bold">M</div>
           <div>
-            <h1 className="text-2xl md:text-3xl font-semibold text-gray-900">Dashboard · {businessName}</h1>
+            <h1 className="text-2xl md:text-3xl font-semibold text-gray-900">Dashboard · {user?.name}</h1>
             <p className="text-sm text-gray-500">Resumen operativo y financiero</p>
           </div>
         </div>
