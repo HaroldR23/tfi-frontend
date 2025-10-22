@@ -1,14 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useMemo } from "react";
-import { Errors, RegisterForm } from "../lib/types";
+import { Errors, RegisterForm as RegisterFormType } from "../lib/types";
 import StrongBarPassword from "./StrongBarPassword";
 import useAuthContext from "@/app/contexts/auth/useAuthContext";
 import { User } from "@/app/lib/types/user";
+import { useRouter } from "next/navigation";
 
-const LoginForm = () => {
+const RegisterForm = () => {
   const { handleRegister, loading } = useAuthContext();
 
-  const [form, setForm] = useState<RegisterForm>({
+  const [form, setForm] = useState<RegisterFormType>({
     role: "empleador",
     nombre: "",
     email: "",
@@ -23,6 +24,7 @@ const LoginForm = () => {
   const [errors, setErrors] = useState<Errors>({});
   const [showPwd, setShowPwd] = useState(false);
   const [showPwd2, setShowPwd2] = useState(false);
+  const router = useRouter();
 
   const emailRegex = /\S+@\S+\.\S+/;
   const pwdScore = useMemo(() => {
@@ -66,6 +68,10 @@ const LoginForm = () => {
     }
     await handleRegister?.(payload);
   }
+
+  const handleRedirect = (path: string) => {
+    router.push(`/${path}`);
+  };
 
   const inputBase = "w-full rounded-xl border px-3 py-2.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-4 transition";
   return (
@@ -244,7 +250,7 @@ const LoginForm = () => {
 
               <div className="pt-2 text-center text-sm text-gray-600">
                 ¿Ya tenés cuenta? {" "}
-                <button type="button" onClick={() => {}} className="text-emerald-700 hover:text-emerald-800 font-medium">Iniciar sesión</button>
+                <button type="button" onClick={() => handleRedirect("")} className="text-emerald-700 hover:text-emerald-800 hover:underline font-medium cursor-pointer">Iniciar sesión</button>
               </div>
             </form>
           </div>
@@ -258,4 +264,4 @@ const LoginForm = () => {
 
 }
 
-export default LoginForm;
+export default RegisterForm;

@@ -1,12 +1,7 @@
 "use client";
+import useAuthContext from "@/app/contexts/auth/useAuthContext";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-
-/**
- * Pantalla de Login – Manito (lado empresa)
- * - Layout dividido: mensaje de marca a la izquierda y tarjeta de login a la derecha
- * - TailwindCSS puro
- * - Accesible (labels, aria, focus states)
- */
 
 export default function LoginManito() {
   const [email, setEmail] = useState("");
@@ -14,6 +9,8 @@ export default function LoginManito() {
   const [remember, setRemember] = useState(true);
   const [showPwd, setShowPwd] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const { handleLogin } = useAuthContext();
+  const router = useRouter();
 
   const validate = () => {
     const errs: typeof errors = {};
@@ -24,36 +21,17 @@ export default function LoginManito() {
     return Object.keys(errs).length === 0;
   };
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
-    // Demo: mostrar valores en consola
-    console.log({ email, password: "••••••", remember });
-    alert("Sesión iniciada (demo)");
+    await handleLogin?.(email, password);
   };
 
+  const handleRedirect = (path: string) => {
+    router.push(`/${path}`);
+  };
   return (
-    <div className="min-h-screen bg-gradient-to-tr from-emerald-50 via-white to-emerald-100 text-slate-900">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 flex items-center gap-10">
-        {/* Columna izquierda: marca */}
-        <section className="hidden md:flex flex-1 flex-col gap-8">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-emerald-600 text-white grid place-items-center font-bold">M</div>
-            <div>
-              <h1 className="text-2xl font-semibold leading-tight">Manito</h1>
-              <p className="text-sm text-slate-600 max-w-md">Conectamos locales gastronómicos con talento validado en minutos.</p>
-            </div>
-          </div>
-
-          <div className="rounded-2xl border border-emerald-100 bg-white/70 backdrop-blur px-5 py-4 shadow-sm max-w-md">
-            <ul className="list-disc pl-5 text-sm space-y-1 text-slate-700">
-              <li>Matching priorizado por skills y cercanía</li>
-              <li>Publicaciones activas según tu plan</li>
-              <li>Pagos en garantía y liberación según SLA</li>
-            </ul>
-          </div>
-        </section>
-
+      <div>
         {/* Columna derecha: tarjeta login */}
         <section className="flex-1 flex justify-center">
           <div className="w-full max-w-md rounded-2xl bg-white shadow-[0_6px_24px_rgba(16,185,129,0.15)] border border-emerald-100 p-6">
@@ -78,7 +56,7 @@ export default function LoginManito() {
               <div>
                 <div className="flex items-center justify-between">
                   <label htmlFor="password" className="block text-sm font-medium text-slate-700">Contraseña</label>
-                  <a href="#" className="text-xs text-emerald-700 hover:underline">¿Olvidaste tu contraseña?</a>
+                  <div className="text-xs text-emerald-700 hover:underline cursor-pointer" onClick={() => handleRedirect("recuperar")}>¿Olvidaste tu contraseña?</div>
                 </div>
                 <div className={`mt-1 relative rounded-xl border ${errors.password ? 'border-rose-300' : 'border-slate-200'} focus-within:ring-2 focus-within:ring-emerald-500 focus-within:border-emerald-500`}>
                   <input
@@ -118,9 +96,9 @@ export default function LoginManito() {
               </button>
 
               {/* Crear cuenta */}
-              <p className="text-center text-sm text-slate-600">
-                ¿No tenés cuenta? <a className="text-emerald-700 hover:underline" href="#">Crear cuenta</a>
-              </p>
+              <div className="text-center text-sm text-slate-600 flex items-center justify-center gap-1">
+                ¿No tenés cuenta? <div className="text-emerald-700 hover:underline cursor-pointer" onClick={() => handleRedirect("registro")}>Crear cuenta</div>
+              </div>
 
               {/* Divider decorativo */}
               <div className="relative my-2 text-center text-xs text-slate-400">
@@ -136,7 +114,7 @@ export default function LoginManito() {
             </form>
           </div>
         </section>
-      </div>
+      {/* </div> */}
 
       {/* Footer */}
       <footer className="px-6 pb-6 text-center text-xs text-slate-500">© {new Date().getFullYear()} Manito · CABA/AMBA</footer>

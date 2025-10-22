@@ -6,4 +6,5 @@ export interface AuthContextProps {
     loading?: boolean;
     setError: (error: string | null) => void;
     handleRegister?: (user: User) => Promise<void>;
+    handleLogin?: (email: string, password: string) => Promise<void>;
 }

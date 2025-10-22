@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
+
+import useAuthContext from "@/app/contexts/auth/useAuthContext";
 import React, { useMemo } from "react";
 
 /**
@@ -62,7 +66,7 @@ export default function NegociosDashboard() {
     () => new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 }),
     []
   );
-
+  const { user } = useAuthContext();
   return (
     <div className="min-h-screen w-full bg-white text-slate-900">
       {/* Header */}
@@ -71,7 +75,7 @@ export default function NegociosDashboard() {
           <div className="flex items-center gap-3">
             <div className="h-9 w-9 rounded-xl bg-emerald-600 text-white grid place-items-center font-bold">M</div>
             <div>
-              <h1 className="text-xl font-semibold">Dashboard · casa</h1>
+              <h1 className="text-xl font-semibold">Dashboard · {user?.name}</h1>
               <p className="text-xs text-slate-500">Resumen operativo y financiero</p>
             </div>
           </div>
@@ -182,7 +186,7 @@ export default function NegociosDashboard() {
   );
 }
 
-function KpiCard({ title, subtitle, children }) {
+function KpiCard({ title, subtitle, children }: any) {
   return (
     <div className="rounded-2xl border border-emerald-100 bg-white p-4">
       <h3 className="text-sm font-medium text-slate-700">{title}</h3>
@@ -192,7 +196,7 @@ function KpiCard({ title, subtitle, children }) {
   );
 }
 
-function EstadoPill({ estado }) {
+function EstadoPill({ estado }: any) {
   const styles = {
     "Activo": "bg-emerald-50 text-emerald-700 border-emerald-200",
     "Pausado": "bg-amber-50 text-amber-700 border-amber-200",
@@ -206,7 +210,7 @@ function EstadoPill({ estado }) {
   );
 }
 
-function EstadoTurnoPill({ estado }) {
+function EstadoTurnoPill({ estado }: any) {
   const styles = {
     "Confirmado": "bg-emerald-50 text-emerald-700 border-emerald-200",
     "Pendiente": "bg-amber-50 text-amber-700 border-amber-200",
