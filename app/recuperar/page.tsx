@@ -1,5 +1,5 @@
 import Branding from "../components/Branding";
-import RecuperarContraseña from "./components/recuperarContraseña";
+import RecuperarContraseña from "./components/RecuperarContraseña";
 
 const RecuperarContrasenaPage = () => {
   return (

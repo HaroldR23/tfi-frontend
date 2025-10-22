@@ -11,4 +11,5 @@ export const AuthContext = createContext<AuthContextProps>({
 		setError: () => {},
 		handleRegister: async () => {},
 		handleLogin: async () => {},
+		handleResetPassword: async () => {},
 });

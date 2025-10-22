@@ -1,5 +1,8 @@
 "use client";
-import React, { useEffect, useState, useRef } from "react";
+import StrongBarPassword from "@/app/components/StrongBarPassword";
+import useAuthContext from "@/app/contexts/auth/useAuthContext";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState, useRef, useMemo } from "react";
 
 
 export default function RecuperarContraseña() {
@@ -19,9 +22,24 @@ export default function RecuperarContraseña() {
   const [resetOk, setResetOk] = useState(false);
   const [otpError, setOtpError] = useState<string | null>(null);
 
+  const router = useRouter();
+  const { handleResetPassword } = useAuthContext();
+  
   const emailOk = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
   const passOk = (v: string) => v.length >= 8; // regla simple
   const otpOk = (v: string) => /^\d{6}$/.test(v);
+
+  const pwdScore = useMemo(() => {
+      const p = password || "";
+      let s = 0;
+      if (p.length >= 8) s++;
+      if (/[A-Z]/.test(p)) s++;
+      if (/[a-z]/.test(p)) s++;
+      if (/\d/.test(p)) s++;
+      if (/[^\w\s]/.test(p)) s++;
+      if (/[^A-Za-z0-9]/.test(p)) s++;
+      return Math.min(s, 5); 
+    }, [password]);
 
   const handleRequest = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,12 +59,18 @@ export default function RecuperarContraseña() {
     if (!passOk(password)) { setOtpError("La contraseña debe tener al menos 8 caracteres"); return; }
     if (password !== password2) { setOtpError("Las contraseñas no coinciden"); return; }
     setResetting(true);
-    // Mock API: validar OTP y setear nueva contraseña
-    await new Promise(r => setTimeout(r, 900));
+
+    await handleResetPassword?.(email, password);
     setResetting(false);
     setResetOk(true);
+    setOtp("");
+    setPassword("");
+    setPassword2("");
   };
 
+   const handleRedirect = () => {
+    router.push("/");
+  };
   // Accesibilidad: enfocar primer input al cambiar de modo
   const emailRef = useRef<HTMLInputElement | null>(null);
   const otpRef = useRef<HTMLInputElement | null>(null);
@@ -60,6 +84,12 @@ export default function RecuperarContraseña() {
     console.assert(passOk("12345678") && !passOk("123"), "passOk regla");
   }, []);
 
+  const handleEnterCode = () => {
+    if (!emailOk(email)) { setReqError("Ingresá un correo válido"); return; }
+    setMode("otp");
+    setReqError(null);
+
+  }
   return (
     <div>
       <section className="order-1 lg:order-2 flex justify-center">
@@ -98,6 +128,7 @@ export default function RecuperarContraseña() {
                 <div>
                   <label htmlFor="pass1" className="block text-sm text-gray-700">Nueva contraseña</label>
                   <input id="pass1" type="password" value={password} onChange={(e)=>setPassword(e.target.value)} placeholder="Mínimo 8 caracteres" className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-emerald-200" />
+                  <StrongBarPassword score={pwdScore} />
                 </div>
                 <div>
                   <label htmlFor="pass2" className="block text-sm text-gray-700">Repetir contraseña</label>
@@ -113,9 +144,9 @@ export default function RecuperarContraseña() {
 
           <div className="mt-4 space-y-2 text-sm">
             {mode === 'request' ? (
-              <button className="text-emerald-700 hover:underline cursor-pointer" onClick={() => setMode('otp')}>¿Ya lo recibiste? Ingresar código</button>
+              <button className="text-emerald-700 hover:underline cursor-pointer" onClick={handleEnterCode}>¿Ya lo recibiste? Ingresar código</button>
             ) : (
-              <button className="text-emerald-700 hover:underline cursor-pointer" onClick={() => alert('Ir a iniciar sesión')}>Volver a iniciar sesión</button>
+              <button className="text-emerald-700 hover:underline cursor-pointer" onClick={handleRedirect}>Volver a iniciar sesión</button>
             )}
           </div>
         </div>

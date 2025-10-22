@@ -4,7 +4,7 @@ import { AuthContext } from "./AuthContext";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { User } from "@/app/lib/types/user";
-import { createUser, loginUser } from "@/app/services/userServices";
+import { createUser, loginUser, resetPassword } from "@/app/services/userServices";
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -68,8 +68,31 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
   
+  const handleResetPassword = async (email: string, newPassword: string) => {
+    // Implement password reset logic here
+    try {
+      setLoading(true);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Assume password reset is successful
+      await resetPassword(email, newPassword);
+
+    } catch {
+      setError("Error during password reset.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, error, loading, setError, handleRegister, handleLogin }}>
+    <AuthContext.Provider value={{ 
+        user, 
+        error, 
+        loading, 
+        setError, 
+        handleRegister, 
+        handleLogin, 
+        handleResetPassword 
+      }}>
       {children}
     </AuthContext.Provider>
   );

@@ -41,3 +41,19 @@ export const loginUser = async (email: string, password: string) => {
 
   return response.json();
 };
+
+export const resetPassword = async (email: string, newPassword: string) => {
+  const response = await fetch(`${TFI_BACKEND_URL}/reset-password`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email, new_password: newPassword }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to reset password");
+  }
+
+  return response.json();
+};

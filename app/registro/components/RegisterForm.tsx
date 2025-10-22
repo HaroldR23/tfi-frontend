@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useMemo } from "react";
 import { Errors, RegisterForm as RegisterFormType } from "../lib/types";
-import StrongBarPassword from "./StrongBarPassword";
+import StrongBarPassword from "../../components/StrongBarPassword";
 import useAuthContext from "@/app/contexts/auth/useAuthContext";
 import { User } from "@/app/lib/types/user";
 import { useRouter } from "next/navigation";
