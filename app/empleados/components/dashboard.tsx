@@ -1,8 +1,8 @@
 "use client";
 
+import useAuthContext from "@/app/contexts/auth/useAuthContext";
 // NOTE: Fixed duplicated/nested <section> and ensured all sections are properly closed.
 // Mock de useAuthContext para previsualización en canvas
-const useAuthContext = () => ({ user: { name: "Daniel Pérez", role: "trabajador" } });
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from "react";
 
@@ -101,22 +101,6 @@ export default function EmpleadosDashboard({
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-emerald-100 p-4 md:p-8">
       <div className="max-w-7xl mx-auto flex gap-6">
-        <aside id="sidebar" className={`${sidebarVisible ? (sidebarCollapsed ? 'w-16' : 'w-64') : 'w-0'} ${sidebarVisible ? 'block' : 'hidden'} ${sidebarVisible ? 'xl:block' : 'xl:hidden'}`}>
-          <nav className="bg-white/80 backdrop-blur-xl border border-emerald-100 rounded-2xl p-4 md:p-5 shadow-sm h-full flex flex-col justify-between">
-            <ul className="space-y-2 text-sm">
-              <li><button className="w-full text-left px-3 py-2 rounded-lg hover:bg-emerald-50">{sidebarCollapsed ? 'MC' : 'Mi cuenta'}</button></li>
-              <li><button className="w-full text-left px-3 py-2 rounded-lg hover:bg-emerald-50">{sidebarCollapsed ? 'Doc' : 'Documentación'}</button></li>
-              <li><button className="w-full text-left px-3 py-2 rounded-lg hover:bg-emerald-50">{sidebarCollapsed ? 'PT' : 'Próximos turnos'}</button></li>
-              <li><button className="w-full text-left px-3 py-2 rounded-lg hover:bg-emerald-50">{sidebarCollapsed ? 'OS' : 'Oportunidades sugeridas'}</button></li>
-              <li><button className="w-full text-left px-3 py-2 rounded-lg hover:bg-emerald-50">{sidebarCollapsed ? 'RP' : 'Reputación'}</button></li>
-              <li><button className="w-full text-left px-3 py-2 rounded-lg hover:bg-emerald-50 text-rose-700">{sidebarCollapsed ? 'CS' : 'Cerrar sesión'}</button></li>
-            </ul>
-            <div>
-              <button onClick={() => setSidebarCollapsed((s) => !s)} className="w-full text-left px-3 py-2 rounded-lg border border-gray-200 hover:bg-gray-50">{sidebarCollapsed ? '»' : '«'} {sidebarCollapsed ? 'Expandir' : 'Colapsar'}</button>
-            </div>
-          </nav>
-        </aside>
-
         <main className="flex-1">
           {/* Header */}
           <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-6">

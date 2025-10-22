@@ -1,0 +1,1 @@
+export const TFI_BACKEND_URL = process.env.TFI_BACKEND_URL || "http://localhost:8000";
